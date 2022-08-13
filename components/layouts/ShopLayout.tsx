@@ -2,6 +2,7 @@ import { maxWidth, padding } from "@mui/system";
 import Head from "next/head";
 import { FC, PropsWithChildren } from "react";
 import { Navbar } from "../ui";
+import { Sidebar } from "../ui/Sidebar";
 
 interface Props {
   title: string;
@@ -30,7 +31,7 @@ export const ShopLayout: FC<PropsWithChildren<Props>> = ({
         <Navbar></Navbar>
       </nav>
 
-      {/*Todo: sidebar */}
+      <Sidebar />
 
       <main
         style={{ margin: "80px auto", maxWidth: "1440px", padding: "0px 30px" }}
