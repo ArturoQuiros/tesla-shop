@@ -1,7 +1,10 @@
 import { Box, Button, Chip, Grid, Typography } from "@mui/material";
 import React from "react";
 import { ShopLayout } from "../../components/layouts/ShopLayout";
-import { ProductSlideShow } from "../../components/products";
+import {
+  ProductSizeSelector,
+  ProductSlideShow,
+} from "../../components/products";
 import { ItemCounter } from "../../components/ui";
 import { initialData } from "../../database/products";
 
@@ -28,6 +31,10 @@ const slug = () => {
             <Box sx={{ my: 2 }}>
               <Typography variant="subtitle2"> Quantity</Typography>
               <ItemCounter></ItemCounter>
+              <ProductSizeSelector
+                //selectedSize={product.sizes[1]}
+                sizes={product.sizes}
+              ></ProductSizeSelector>
             </Box>
 
             <Button color="secondary" className="circular-btn">
