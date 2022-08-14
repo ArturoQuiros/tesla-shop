@@ -19,7 +19,7 @@ const CartPage = () => {
         Cart
       </Typography>
 
-      <Grid container sx={{ marginLeft: 2 }}>
+      <Grid container sx={{ marginLeft: 2, marginTop: 2 }}>
         <Grid item xs={12} sm={7}>
           <CartList isEditable={true}></CartList>
         </Grid>

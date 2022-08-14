@@ -14,7 +14,7 @@ import { ShopLayout } from "../../components/layouts";
 
 const AddressPage = () => {
   return (
-    <ShopLayout title={"Billing"} description={"Lets finish your order"}>
+    <ShopLayout title={"Order Billing"} description={"Lets finish your order"}>
       <Typography variant="h1" component={"h1"}>
         Contact Information
       </Typography>
@@ -63,7 +63,7 @@ const AddressPage = () => {
         justifyContent={"center"}
       >
         <Button fullWidth color="secondary" className="circular-btn">
-          Confirm Order
+          Confirm
         </Button>
       </Box>
     </ShopLayout>
