@@ -16,7 +16,7 @@ export default async function handler(
 
   await db.connect();
   await Product.deleteMany();
-  await Product.insertMany(seedDb.initialData);
+  await Product.insertMany(seedDb.initialData.products);
   await db.disconnect();
 
   res.status(200).json({ message: "Proceso realizado correctamente" });
