@@ -1,4 +1,5 @@
 import mongoose, { Schema, model, Model } from "mongoose";
+import { text } from "stream/consumers";
 import { IProduct } from "../interfaces";
 
 const productSchema = new Schema(
@@ -32,6 +33,8 @@ const productSchema = new Schema(
     timestamps: true,
   }
 );
+
+productSchema.index({ title: "text", tags: "text" });
 
 const Product: Model<IProduct> =
   mongoose.models.Product || model("Product", productSchema);
