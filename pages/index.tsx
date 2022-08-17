@@ -2,13 +2,10 @@ import { Typography } from "@mui/material";
 import type { NextPage } from "next";
 import { ShopLayout } from "../components/layouts";
 import { ProductList } from "../components/products";
-import useSWR from "swr";
-
-const fetcher = (...args: [key: string]) =>
-  fetch(...args).then((res) => res.json());
+import { useProducts } from "../hooks";
 
 const HomePage: NextPage = () => {
-  const { data, error } = useSWR("/api/products", fetcher);
+  const { products, isLoading } = useProducts("/products");
 
   return (
     <>
@@ -20,7 +17,11 @@ const HomePage: NextPage = () => {
           Todos los productos
         </Typography>
 
-        <ProductList products={data}></ProductList>
+        {isLoading ? (
+          <h1>loading</h1>
+        ) : (
+          <ProductList products={products}></ProductList>
+        )}
       </ShopLayout>
     </>
   );
