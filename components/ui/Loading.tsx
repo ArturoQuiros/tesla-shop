@@ -10,7 +10,7 @@ export const Loading = () => {
       height="calc(100vh - 200px)"
       sx={{ flexDirection: { xs: "column", sm: "row" } }}
     >
-      <CircularProgress size={"200px"} thickness={2}></CircularProgress>
+      <CircularProgress size={"50px"} thickness={2}></CircularProgress>
     </Box>
   );
 };
