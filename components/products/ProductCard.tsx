@@ -11,6 +11,8 @@ import React, { FC, useMemo, useState } from "react";
 import { IProduct } from "../../interfaces";
 import NextLink from "next/link";
 import { Loading } from "../ui";
+import { useRouter } from "next/router";
+import { useProducts } from "../../hooks";
 
 interface Props {
   product: IProduct;
@@ -35,7 +37,7 @@ export const ProductCard: FC<Props> = ({ product }) => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <Card>
-        <NextLink href={"/products/slug"} prefetch={false} passHref>
+        <NextLink href={`/products/${product.slug}`} prefetch={false} passHref>
           <Link>
             <CardActionArea>
               <CardMedia
