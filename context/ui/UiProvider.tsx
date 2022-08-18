@@ -22,7 +22,6 @@ export const UiProvider: FC<PropsWithChildren<UiState>> = ({ children }) => {
         ...state,
 
         //props
-
         //methods
         toggleSideMenu,
       }}
