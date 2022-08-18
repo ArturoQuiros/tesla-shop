@@ -67,6 +67,15 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const { slug } = params as { slug: string };
   const product = await getProductBySlug(slug); // your fetch function here
 
+  if (!product) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
   return {
     props: { product },
   };
