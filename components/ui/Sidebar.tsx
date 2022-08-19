@@ -57,6 +57,7 @@ export const Sidebar = () => {
         <List>
           <ListItem>
             <Input
+              autoFocus
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
               onKeyPress={(event) =>

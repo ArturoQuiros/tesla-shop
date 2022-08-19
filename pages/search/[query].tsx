@@ -35,6 +35,7 @@ const HomePage: NextPage<Props> = ({
             color="secondary"
             component={"h1"}
             sx={{ ml: 1 }}
+            textTransform="capitalize"
           >
             {` ${query}`}
           </Typography>
