@@ -42,7 +42,7 @@ export const ProductCard: FC<Props> = ({ product }) => {
               {product.inStock === 0 && (
                 <Chip
                   color="error"
-                  label="Out of Stock"
+                  label="Sold Out"
                   sx={{
                     position: "absolute",
                     zIndex: 99,

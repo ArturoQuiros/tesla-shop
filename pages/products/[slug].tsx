@@ -76,7 +76,7 @@ const ProductPage: NextPage<Props> = ({ product }) => {
             </Box>
 
             {product.inStock === 0 ? (
-              <Chip label="Out of Stock" color="error" variant="outlined" />
+              <Chip label="Sold Out" color="error" variant="outlined" />
             ) : (
               <Button
                 disabled={tempCartProduct.size === undefined ? true : false}
