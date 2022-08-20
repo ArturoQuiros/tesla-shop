@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { Box, Button, Chip, Grid, Typography } from "@mui/material";
 
@@ -11,12 +11,17 @@ import {
   ProductSlideShow,
 } from "../../components/products";
 import { ItemCounter } from "../../components/ui";
+import { CartContext } from "../../context/cart/CartContext";
+import { useRouter } from "next/router";
 
 interface Props {
   product: IProduct;
 }
 
 const ProductPage: NextPage<Props> = ({ product }) => {
+  const { addProductToCart } = useContext(CartContext);
+  const router = useRouter();
+
   const [tempCartProduct, setTempCartProduct] = useState<ICartProduct>({
     _id: product._id,
     image: product.images[0],
@@ -25,7 +30,7 @@ const ProductPage: NextPage<Props> = ({ product }) => {
     slug: product.slug,
     title: product.title,
     gender: product.gender,
-    quantity: 3,
+    quantity: 1,
   });
 
   const selectedSize = (size: ISize) => {
@@ -40,6 +45,11 @@ const ProductPage: NextPage<Props> = ({ product }) => {
       ...currentProduct,
       quantity: quantity,
     }));
+  };
+
+  const addTempProductToCart = () => {
+    addProductToCart(tempCartProduct);
+    router.push("/cart");
   };
 
   return (
@@ -82,6 +92,7 @@ const ProductPage: NextPage<Props> = ({ product }) => {
                 disabled={tempCartProduct.size === undefined ? true : false}
                 color="secondary"
                 className="circular-btn"
+                onClick={addTempProductToCart}
               >
                 Add to Cart
               </Button>
