@@ -23,6 +23,7 @@ const CartPage = () => {
         <Grid item xs={12} sm={7}>
           <CartList isEditable={true}></CartList>
         </Grid>
+
         <Grid item xs={12} sm={5}>
           <Card className="summary-card">
             <CardContent>
@@ -30,7 +31,9 @@ const CartPage = () => {
                 <strong>Order Summary</strong>
               </Typography>
               <Divider sx={{ my: 1 }}> </Divider>
-              <OrderSummary></OrderSummary>
+
+              <OrderSummary />
+
               <Box sx={{ mt: 3 }}>
                 <Button color="secondary" className="circular-btn" fullWidth>
                   Checkout
