@@ -79,18 +79,14 @@ export const Navbar = () => {
 
         {isSearchVisible ? (
           <Input
-            sx={{
-              display: { xs: "none", sm: "flex" },
-            }}
+            sx={{ display: { xs: "none", sm: "flex" } }}
             className="fadeIn"
             autoFocus
             value={searchTerm}
-            onChange={(event) => setSearchTerm(event.target.value)}
-            onKeyPress={(event) =>
-              event.key === "Enter" ? onSearchTerm() : null
-            }
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyPress={(e) => (e.key === "Enter" ? onSearchTerm() : null)}
             type="text"
-            placeholder="Search..."
+            placeholder="Buscar..."
             endAdornment={
               <InputAdornment position="end">
                 <IconButton onClick={() => setIsSearchVisible(false)}>
@@ -101,19 +97,18 @@ export const Navbar = () => {
           />
         ) : (
           <IconButton
-            sx={{
-              display: { xs: "flex", sm: "none" },
-            }}
-            className="fadeIn"
             onClick={() => setIsSearchVisible(true)}
+            className="fadeIn"
+            sx={{ display: { xs: "none", sm: "flex" } }}
           >
-            <SearchOutlined></SearchOutlined>
+            <SearchOutlined />
           </IconButton>
         )}
 
+        {/* Pantallas pequeñas */}
         <IconButton
-          onClick={toggleSideMenu}
           sx={{ display: { xs: "flex", sm: "none" } }}
+          onClick={toggleSideMenu}
         >
           <SearchOutlined />
         </IconButton>
