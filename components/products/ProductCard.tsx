@@ -3,6 +3,7 @@ import {
   Card,
   CardActionArea,
   CardMedia,
+  Chip,
   Grid,
   Link,
   Typography,
@@ -11,8 +12,6 @@ import React, { FC, useMemo, useState } from "react";
 import { IProduct } from "../../interfaces";
 import NextLink from "next/link";
 import { Loading } from "../ui";
-import { useRouter } from "next/router";
-import { useProducts } from "../../hooks";
 
 interface Props {
   product: IProduct;
@@ -40,6 +39,19 @@ export const ProductCard: FC<Props> = ({ product }) => {
         <NextLink href={`/products/${product.slug}`} prefetch={false} passHref>
           <Link>
             <CardActionArea>
+              {product.inStock === 0 && (
+                <Chip
+                  color="secondary"
+                  label="Out of Stock"
+                  sx={{
+                    position: "absolute",
+                    zIndex: 99,
+                    top: "10px",
+                    left: "10px",
+                  }}
+                />
+              )}
+
               <CardMedia
                 component={"img"}
                 className="fadeIn"

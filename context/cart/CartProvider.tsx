@@ -20,6 +20,8 @@ export const CartProvider: FC<PropsWithChildren<CartState>> = ({
       value={{
         ...state,
       }}
-    ></CartContext.Provider>
+    >
+      {children}
+    </CartContext.Provider>
   );
 };
