@@ -74,7 +74,7 @@ export const CartProvider: FC<PropsWithChildren<CartState>> = ({
   };
 
   const updateCartQuantity = (product: ICartProduct) => {
-    dispatch({ type: "Cart - Update Products in Cart", payload: [] });
+    dispatch({ type: "Cart - Change Cart Quantity", payload: product });
   };
 
   return (

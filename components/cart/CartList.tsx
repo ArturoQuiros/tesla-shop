@@ -11,13 +11,23 @@ import React, { FC, useContext } from "react";
 import NextLink from "next/link";
 import { ItemCounter } from "../ui";
 import { CartContext } from "../../context";
+import { ICartProduct } from "../../interfaces";
 
 interface Props {
   isEditable?: boolean;
 }
 
 export const CartList: FC<Props> = ({ isEditable = false }) => {
-  const { cart } = useContext(CartContext);
+  const { cart, updateCartQuantity } = useContext(CartContext);
+
+  const changeCartItemQuantity = (
+    product: ICartProduct,
+    newQuantity: number
+  ) => {
+    product.quantity = newQuantity;
+    updateCartQuantity(product);
+  };
+
   return (
     <>
       {cart.map((product) => (
@@ -45,14 +55,16 @@ export const CartList: FC<Props> = ({ isEditable = false }) => {
               <Typography variant="body1">{product.title}</Typography>
 
               <Typography variant="body1">
-                Size: <strong>M</strong>
+                Size: <strong>{product.size}</strong>
               </Typography>
 
               {isEditable ? (
                 <ItemCounter
                   currentValue={product.quantity}
                   maxValue={99}
-                  updateQuantity={() => {}}
+                  updateQuantity={(value) => {
+                    changeCartItemQuantity(product, value);
+                  }}
                 ></ItemCounter>
               ) : (
                 <Typography>
