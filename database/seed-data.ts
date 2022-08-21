@@ -17,7 +17,7 @@ interface SeedUser {
   name: string;
   email: string;
   password: string;
-  roles: IRoles;
+  role: IRoles;
 }
 
 type ValidSizes = "XS" | "S" | "M" | "L" | "XL" | "XXL" | "XXXL";
@@ -34,13 +34,13 @@ export const initialData: SeedData = {
       name: "Arturo",
       email: "arturo@gmail.com",
       password: "123456789",
-      roles: "admin",
+      role: "admin",
     },
     {
       name: "Jose",
       email: "jose@gmail.com",
       password: "123456789",
-      roles: "client",
+      role: "client",
     },
   ],
   products: [
