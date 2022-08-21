@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { db } from "../../../database";
-import { connect } from "../../../database/db";
-import { User } from "../../../models";
 import bcrypt from "bcryptjs";
+import { db } from "../../../database";
+import { User } from "../../../models";
+import { jwt } from "../../../utils";
 
 type Data =
   | {
@@ -53,7 +53,9 @@ const loginUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     return res.status(400).json({ message: "email/user not valid" });
   }
 
-  const { role, name } = userInDB;
+  const { role, name, _id } = userInDB;
 
-  return res.status(200).json({ token: "", user: { role, name, email } });
+  const token = jwt.signToken(_id, email);
+
+  return res.status(200).json({ token: token, user: { role, name, email } });
 };
