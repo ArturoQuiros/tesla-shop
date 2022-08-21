@@ -6,10 +6,18 @@ import Cookie from "js-cookie";
 
 export interface CartState {
   cart: ICartProduct[];
+  numberOfItems: number;
+  subTotal: number;
+  taxRate: number;
+  total: number;
 }
 
 const initalState: CartState = {
   cart: [],
+  numberOfItems: 0,
+  subTotal: 0,
+  taxRate: 0,
+  total: 0,
 };
 
 export const CartProvider: FC<PropsWithChildren<CartState>> = ({
@@ -60,7 +68,7 @@ export const CartProvider: FC<PropsWithChildren<CartState>> = ({
       total: subTotal + subTotal * taxRate,
     };
 
-    console.log(orderSummary);
+    dispatch({ type: "Cart - Update Order Summary", payload: orderSummary });
   }, [state.cart]);
 
   const addProductToCart = (product: ICartProduct) => {
