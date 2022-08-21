@@ -5,7 +5,7 @@ import { FC, useState } from "react";
 
 interface Props {
   currentValue: number;
-  updateQuantity: (quantity?: number) => void;
+  updateQuantity: (quantity: number) => void;
   maxValue: number;
 }
 
