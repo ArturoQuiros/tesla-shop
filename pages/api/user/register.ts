@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcryptjs";
 import { db } from "../../../database";
 import { User } from "../../../models";
-import { jwt } from "../../../utils";
+import { jwt, validations } from "../../../utils";
 
 type Data =
   | {
@@ -34,6 +34,10 @@ const registerUser = async (
   res: NextApiResponse<Data>
 ) => {
   let { email = "", password = "", name = "" } = req.body;
+
+  if (!validations.isValidEmail(email)) {
+    return res.status(400).json({ message: "invalid email" });
+  }
 
   if (email.trim() === "" || password.trim().lenth < 6 || name.trim() === "") {
     return res.status(400).json({ message: "email/user/password not valid" });
