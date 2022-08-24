@@ -1,4 +1,5 @@
 import NextLink from "next/link";
+import { useState, useContext } from "react";
 import { useForm } from "react-hook-form";
 import {
   Box,
@@ -13,7 +14,8 @@ import { AuthLayout } from "../../components/layouts";
 import { validations } from "../../utils";
 import { tesloAPI } from "../../api";
 import { ErrorOutline } from "@mui/icons-material";
-import { useState } from "react";
+import { AuthContext } from "../../context";
+import { useRouter } from "next/router";
 
 type FormData = {
   email: string;
@@ -28,21 +30,19 @@ const LoginPage = () => {
   } = useForm<FormData>();
 
   const [showError, setShowError] = useState(false);
+  const { loginUser } = useContext(AuthContext);
+  const router = useRouter();
 
   const onLoginUser = async ({ email, password }: FormData) => {
     setShowError(false);
-    try {
-      const { data } = await tesloAPI.post("/user/login", {
-        email,
-        password,
-      });
-      const { token, user } = data;
-      console.log({ token, user });
+    const isValidLogin = await loginUser(email, password);
 
-      console.log({ token, user });
-    } catch (error) {
+    if (!isValidLogin) {
       setShowError(true);
       setTimeout(() => setShowError(false), 3000);
+      return;
+    } else {
+      router.replace("/");
     }
   };
 
