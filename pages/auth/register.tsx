@@ -1,3 +1,4 @@
+import { useContext, useState } from "react";
 import NextLink from "next/link";
 import {
   Box,
@@ -8,12 +9,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { AuthLayout } from "../../components/layouts";
 import { useForm } from "react-hook-form";
-import { tesloAPI } from "../../api";
-import { validations } from "../../utils";
-import { useState } from "react";
 import { ErrorOutline } from "@mui/icons-material";
+import { AuthLayout } from "../../components/layouts";
+import { validations } from "../../utils";
+import { AuthContext } from "../../context";
+import { useRouter } from "next/router";
 
 type FormData = {
   name: string;
@@ -29,24 +30,21 @@ const RegisterPage = () => {
   } = useForm<FormData>();
 
   const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const { registerUser } = useContext(AuthContext);
+  const router = useRouter();
 
   const onRegisterUser = async ({ name, email, password }: FormData) => {
     setShowError(false);
+    const { hasError, message } = await registerUser(name, email, password);
 
-    try {
-      const { data } = await tesloAPI.post("/user/register", {
-        email,
-        password,
-        name,
-      });
-
-      const { token, user } = data;
-      console.log({ token, user });
-    } catch (error) {
+    if (hasError) {
       setShowError(true);
+      setErrorMessage(message!);
       setTimeout(() => setShowError(false), 3000);
-      console.log(error);
+      return;
     }
+    router.replace("/");
   };
 
   return (
@@ -60,7 +58,7 @@ const RegisterPage = () => {
               </Typography>
               <Chip
                 sx={{ mt: 2, display: showError ? "flex" : "none" }}
-                label="Email already in use"
+                label={errorMessage}
                 color="error"
                 icon={<ErrorOutline></ErrorOutline>}
                 className="fadeIn"
