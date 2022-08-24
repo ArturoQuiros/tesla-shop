@@ -1,3 +1,4 @@
+import axios from "axios";
 import Cookies from "js-cookie";
 import { FC, PropsWithChildren, useReducer } from "react";
 import { tesloAPI } from "../../api";
@@ -35,6 +36,41 @@ export const AuthProvider: FC<PropsWithChildren<AuthState>> = ({
     }
   };
 
+  const registerUser = async (
+    name: string,
+    email: string,
+    password: string
+  ): Promise<{ hasError: boolean; message?: string }> => {
+    try {
+      const { data } = await tesloAPI.post("/user/register", {
+        email,
+        password,
+        name,
+      });
+      const { token, user } = data;
+
+      Cookies.set("token", token);
+      dispatch({ type: "Auth - Login", payload: user });
+      return {
+        hasError: false,
+        message: "",
+      };
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const { message } = error.response?.data as { message: string };
+        return {
+          hasError: true,
+          message,
+        };
+      }
+
+      return {
+        hasError: true,
+        message: "Unknowkn error",
+      };
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -42,6 +78,7 @@ export const AuthProvider: FC<PropsWithChildren<AuthState>> = ({
 
         //methods
         loginUser,
+        registerUser,
 
         //props
       }}
