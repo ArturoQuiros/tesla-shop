@@ -33,6 +33,8 @@ const LoginPage = () => {
   const { loginUser } = useContext(AuthContext);
   const router = useRouter();
 
+  const destination = router.query.page?.toString() || "/";
+
   const onLoginUser = async ({ email, password }: FormData) => {
     setShowError(false);
     const isValidLogin = await loginUser(email, password);
@@ -43,8 +45,7 @@ const LoginPage = () => {
       return;
     }
 
-    const destionatio = router.query.page?.toString() || "/";
-    router.replace(destionatio);
+    router.replace(destination);
   };
 
   return (
@@ -111,7 +112,14 @@ const LoginPage = () => {
             </Grid>
 
             <Grid item xs={12} display="flex" justifyContent={"center"}>
-              <NextLink href={`/auth/register`} passHref>
+              <NextLink
+                href={
+                  destination !== "/"
+                    ? `/auth/register?page=${destination}`
+                    : `/auth/register`
+                }
+                passHref
+              >
                 <Link underline="always">Register</Link>
               </NextLink>
             </Grid>

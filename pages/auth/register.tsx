@@ -34,6 +34,8 @@ const RegisterPage = () => {
   const { registerUser } = useContext(AuthContext);
   const router = useRouter();
 
+  const destination = router.query.page?.toString() || "/";
+
   const onRegisterUser = async ({ name, email, password }: FormData) => {
     setShowError(false);
     const { hasError, message } = await registerUser(name, email, password);
@@ -123,7 +125,14 @@ const RegisterPage = () => {
             </Grid>
 
             <Grid item xs={12} display="flex" justifyContent={"center"}>
-              <NextLink href={`/auth/login`} passHref>
+              <NextLink
+                href={
+                  destination !== "/"
+                    ? `/auth/login?page=${destination}`
+                    : `/auth/login`
+                }
+                passHref
+              >
                 <Link underline="always">LogIn</Link>
               </NextLink>
             </Grid>
