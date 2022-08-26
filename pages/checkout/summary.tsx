@@ -1,3 +1,5 @@
+import { useContext } from "react";
+import NextLink from "next/link";
 import {
   Box,
   Button,
@@ -8,13 +10,15 @@ import {
   Link,
   Typography,
 } from "@mui/material";
-import React from "react";
 import { ShopLayout } from "../../components/layouts";
 import { CartList } from "../../components/cart/CartList";
 import { OrderSummary } from "../../components/cart";
-import NextLink from "next/link";
+import { CartContext } from "../../context";
+import { countries } from "../../utils";
 
 const SummaryPage = () => {
+  const { shippingInfo } = useContext(CartContext);
+
   return (
     <ShopLayout title={"Order Summary"} description={"Your order summary"}>
       <Typography variant="h1" component={"h1"}>
@@ -46,11 +50,13 @@ const SummaryPage = () => {
                 </NextLink>
               </Box>
 
-              <Typography>Arturo Quirós</Typography>
-              <Typography>Costa Rica</Typography>
-              <Typography>Barrio San Roque, en la casa</Typography>
-              <Typography>joseq2408@gmail.com</Typography>
-              <Typography>+506 86683305</Typography>
+              <Typography>{`${shippingInfo?.firstName} ${shippingInfo?.lastName}`}</Typography>
+              <Typography>
+                {countries.find((c) => c.code === shippingInfo?.country)?.name}
+              </Typography>
+              <Typography>{shippingInfo?.address}</Typography>
+              <Typography>{shippingInfo?.zip}</Typography>
+              <Typography>{shippingInfo?.phone}</Typography>
 
               <Divider sx={{ my: 1 }}> </Divider>
               <Box display={"flex"} justifyContent="space-between">

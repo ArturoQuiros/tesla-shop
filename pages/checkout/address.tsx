@@ -91,7 +91,7 @@ const AddressPage = () => {
                 {...register("country", {
                   required: "Country is required",
                 })}
-                defaultValue={countries[0].code}
+                defaultValue={Cookies.get("country") || countries[0].code}
                 error={!!errors.country}
                 helperText={errors.country?.message}
                 variant="filled"
