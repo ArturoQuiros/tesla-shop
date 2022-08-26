@@ -10,6 +10,7 @@ export interface CartState {
   subTotal: number;
   taxRate: number;
   total: number;
+  isLoaded: boolean;
 }
 
 const initalState: CartState = {
@@ -18,6 +19,7 @@ const initalState: CartState = {
   subTotal: 0,
   taxRate: 0,
   total: 0,
+  isLoaded: false,
 };
 
 export const CartProvider: FC<PropsWithChildren<CartState>> = ({

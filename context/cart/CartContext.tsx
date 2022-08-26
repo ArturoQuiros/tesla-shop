@@ -10,6 +10,7 @@ interface ContextProps {
   subTotal: number;
   taxRate: number;
   total: number;
+  isLoaded: boolean;
 }
 
 export const CartContext = createContext({} as ContextProps);
