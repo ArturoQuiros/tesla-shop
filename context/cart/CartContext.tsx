@@ -13,6 +13,7 @@ interface ContextProps {
   addProductToCart: (product: ICartProduct) => void;
   updateCartQuantity: (product: ICartProduct) => void;
   removeCartProduct: (product: ICartProduct) => void;
+  updateShipping: (info: IShippingInfo) => void;
 }
 
 export const CartContext = createContext({} as ContextProps);

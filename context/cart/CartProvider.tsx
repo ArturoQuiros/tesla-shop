@@ -93,6 +93,13 @@ export const CartProvider: FC<PropsWithChildren<CartState>> = ({
     dispatch({ type: "Cart - Update Order Summary", payload: orderSummary });
   }, [state.cart]);
 
+  const updateShipping = (info: IShippingInfo) => {
+    dispatch({
+      type: "Cart - update Shipping Info",
+      payload: info,
+    });
+  };
+
   const addProductToCart = (product: ICartProduct) => {
     const productInCart = state.cart.some((p) => p._id === product._id);
     if (!productInCart)
@@ -141,6 +148,7 @@ export const CartProvider: FC<PropsWithChildren<CartState>> = ({
         //props
 
         //methods
+        updateShipping,
         removeCartProduct,
         updateCartQuantity,
         addProductToCart,
