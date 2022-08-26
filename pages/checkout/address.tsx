@@ -1,5 +1,5 @@
 import { GetServerSideProps } from "next";
-import { jwt } from "../../utils";
+import { countries, jwt } from "../../utils";
 import {
   Box,
   Button,
@@ -29,9 +29,12 @@ const AddressPage = () => {
         </Grid>
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth>
-            <Select variant="filled" label="Country" value={1}>
-              <MenuItem value={1}>Costa Rica</MenuItem>
-              <MenuItem value={2}>Honduras</MenuItem>
+            <Select variant="filled" label="Country" value={"CRI"}>
+              {countries.map((country) => (
+                <MenuItem key={country.code} value={country.code}>
+                  {country.name}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Grid>
