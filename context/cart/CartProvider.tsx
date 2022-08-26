@@ -94,6 +94,13 @@ export const CartProvider: FC<PropsWithChildren<CartState>> = ({
   }, [state.cart]);
 
   const updateShipping = (info: IShippingInfo) => {
+    Cookie.set("firstName", info.firstName);
+    Cookie.set("lastName", info.lastName);
+    Cookie.set("phone", info.phone);
+    Cookie.set("country", info.country);
+    Cookie.set("address", info.address);
+    Cookie.set("zip", info.zip);
+
     dispatch({
       type: "Cart - update Shipping Info",
       payload: info,
