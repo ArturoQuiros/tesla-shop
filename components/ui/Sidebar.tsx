@@ -30,7 +30,7 @@ import { useRouter } from "next/router";
 export const Sidebar = () => {
   const router = useRouter();
   const { isMenuOpen, toggleSideMenu } = useContext(UiContext);
-  const { isLoggedIn, user } = useContext(AuthContext);
+  const { isLoggedIn, user, logoutUser } = useContext(AuthContext);
   const [searchTerm, setSearchTerm] = useState("");
 
   const onSearchTerm = () => {
@@ -127,14 +127,17 @@ export const Sidebar = () => {
           </ListItem>
 
           {!isLoggedIn ? (
-            <ListItem button>
+            <ListItem
+              button
+              onClick={() => navigateTo(`/auth/login?page=${router.asPath}`)}
+            >
               <ListItemIcon>
                 <VpnKeyOutlined />
               </ListItemIcon>
               <ListItemText primary={"Login"} />
             </ListItem>
           ) : (
-            <ListItem button>
+            <ListItem button onClick={logoutUser}>
               <ListItemIcon>
                 <LoginOutlined />
               </ListItemIcon>

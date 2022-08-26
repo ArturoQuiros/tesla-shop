@@ -41,9 +41,10 @@ const LoginPage = () => {
       setShowError(true);
       setTimeout(() => setShowError(false), 3000);
       return;
-    } else {
-      router.replace("/");
     }
+
+    const destionatio = router.query.page?.toString() || "/";
+    router.replace(destionatio);
   };
 
   return (
