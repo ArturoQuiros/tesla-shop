@@ -1,18 +1,19 @@
-import { countries } from "../../utils";
+import { useRouter } from "next/router";
+import { useContext } from "react";
+import { useForm } from "react-hook-form";
+import Cookies from "js-cookie";
 import {
   Box,
   Button,
   FormControl,
   Grid,
   MenuItem,
-  Select,
   TextField,
   Typography,
 } from "@mui/material";
+import { countries } from "../../utils";
 import { ShopLayout } from "../../components/layouts";
-import { useForm } from "react-hook-form";
-import Cookies from "js-cookie";
-import { useRouter } from "next/router";
+import { CartContext } from "../../context";
 
 type FormData = {
   firstName: string;
@@ -25,6 +26,7 @@ type FormData = {
 
 const AddressPage = () => {
   const router = useRouter();
+  const { updateShipping } = useContext(CartContext);
 
   const getDatafromCookies = (): FormData => {
     return {
@@ -46,13 +48,7 @@ const AddressPage = () => {
   });
 
   const onConfirmInfo = (data: FormData) => {
-    Cookies.set("firstName", data.firstName);
-    Cookies.set("lastName", data.lastName);
-    Cookies.set("phone", data.phone);
-    Cookies.set("country", data.country);
-    Cookies.set("address", data.address);
-    Cookies.set("zip", data.zip);
-
+    updateShipping(data);
     router.push("/checkout/summary");
   };
 
