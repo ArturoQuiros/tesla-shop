@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren, useEffect, useReducer } from "react";
-import { ICartProduct } from "../../interfaces";
+import { ICartProduct, IShippingInfo } from "../../interfaces";
 import { CartContext, CartReducer } from "./";
 
 import Cookie from "js-cookie";
@@ -11,6 +11,7 @@ export interface CartState {
   taxRate: number;
   total: number;
   isLoaded: boolean;
+  shippingInfo?: IShippingInfo;
 }
 
 const initalState: CartState = {
@@ -20,6 +21,7 @@ const initalState: CartState = {
   taxRate: 0,
   total: 0,
   isLoaded: false,
+  shippingInfo: undefined,
 };
 
 export const CartProvider: FC<PropsWithChildren<CartState>> = ({
@@ -40,6 +42,24 @@ export const CartProvider: FC<PropsWithChildren<CartState>> = ({
       dispatch({
         type: "Cart - LoadCart from Cookies",
         payload: [],
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (Cookie.get("firstName")) {
+      const shippingInfo: IShippingInfo = {
+        firstName: Cookie.get("firstName") || "",
+        lastName: Cookie.get("lastName") || "",
+        phone: Cookie.get("phone") || "",
+        country: Cookie.get("country") || "",
+        address: Cookie.get("address") || "",
+        zip: Cookie.get("zip") || "",
+      };
+
+      dispatch({
+        type: "Cart - LoadShipping from Cookies",
+        payload: shippingInfo,
       });
     }
   }, []);
@@ -118,7 +138,6 @@ export const CartProvider: FC<PropsWithChildren<CartState>> = ({
     <CartContext.Provider
       value={{
         ...state,
-
         //props
 
         //methods

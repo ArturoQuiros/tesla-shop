@@ -26,19 +26,23 @@ type FormData = {
 const AddressPage = () => {
   const router = useRouter();
 
+  const getDatafromCookies = (): FormData => {
+    return {
+      firstName: Cookies.get("firstName") || "",
+      lastName: Cookies.get("lastName") || "",
+      phone: Cookies.get("phone") || "",
+      country: Cookies.get("country") || "",
+      address: Cookies.get("address") || "",
+      zip: Cookies.get("zip") || "",
+    };
+  };
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      phone: "",
-      country: countries[0].code,
-      address: "",
-      zip: "",
-    },
+    defaultValues: getDatafromCookies(),
   });
 
   const onConfirmInfo = (data: FormData) => {

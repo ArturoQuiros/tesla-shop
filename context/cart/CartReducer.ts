@@ -1,10 +1,14 @@
-import { ICartProduct } from "../../interfaces";
+import { ICartProduct, IShippingInfo } from "../../interfaces";
 import { CartState } from "./";
 
 type CartActionType =
   | {
       type: "Cart - LoadCart from Cookies";
       payload: ICartProduct[];
+    }
+  | {
+      type: "Cart - LoadShipping from Cookies";
+      payload: IShippingInfo;
     }
   | { type: "Cart - Update Products in Cart"; payload: ICartProduct[] }
   | { type: "Cart - Change Cart Quantity"; payload: ICartProduct }
@@ -29,6 +33,12 @@ export const CartReducer = (
         ...state,
         isLoaded: true,
         cart: action.payload,
+      };
+
+    case "Cart - LoadShipping from Cookies":
+      return {
+        ...state,
+        shippingInfo: action.payload,
       };
 
     case "Cart - Update Products in Cart":
