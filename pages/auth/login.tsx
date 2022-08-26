@@ -12,7 +12,6 @@ import {
 } from "@mui/material";
 import { AuthLayout } from "../../components/layouts";
 import { validations } from "../../utils";
-import { tesloAPI } from "../../api";
 import { ErrorOutline } from "@mui/icons-material";
 import { AuthContext } from "../../context";
 import { useRouter } from "next/router";
