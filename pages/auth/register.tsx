@@ -46,7 +46,7 @@ const RegisterPage = () => {
       setTimeout(() => setShowError(false), 3000);
       return;
     }
-    router.replace("/");
+    router.replace(destination);
   };
 
   return (
