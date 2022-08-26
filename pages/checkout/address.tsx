@@ -11,6 +11,8 @@ import {
 } from "@mui/material";
 import { ShopLayout } from "../../components/layouts";
 import { useForm } from "react-hook-form";
+import Cookies from "js-cookie";
+import { useRouter } from "next/router";
 
 type FormData = {
   firstName: string;
@@ -22,23 +24,32 @@ type FormData = {
 };
 
 const AddressPage = () => {
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
-      firstName: "aaa",
-      lastName: "bb",
-      phone: "cc",
+      firstName: "",
+      lastName: "",
+      phone: "",
       country: countries[0].code,
-      address: "ee",
-      zip: "ff",
+      address: "",
+      zip: "",
     },
   });
 
   const onConfirmInfo = (data: FormData) => {
-    console.log(data);
+    Cookies.set("firstName", data.firstName);
+    Cookies.set("lastName", data.lastName);
+    Cookies.set("phone", data.phone);
+    Cookies.set("country", data.country);
+    Cookies.set("address", data.address);
+    Cookies.set("zip", data.zip);
+
+    router.push("/checkout/summary");
   };
 
   return (
