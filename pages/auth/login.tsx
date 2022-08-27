@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from "react";
 import { GetServerSideProps } from "next";
 import NextLink from "next/link";
-import { useRouter } from "next/router";
+
 import { getProviders, getSession, signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import {
@@ -18,6 +18,7 @@ import { ErrorOutline } from "@mui/icons-material";
 import { AuthLayout } from "../../components/layouts";
 import { validations } from "../../utils";
 import { AuthContext } from "../../context";
+import { useRouter } from "next/router";
 
 type FormData = {
   email: string;

@@ -1,19 +1,19 @@
-import { NextRequest, NextResponse } from "next/server";
-import * as jose from "jose";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt";
 
 export async function middleware(req: NextRequest) {
-  try {
-    await jose.jwtVerify(
-      req.cookies.get("token") as string,
-      new TextEncoder().encode(process.env.JWT_SECRET_SEED)
-    );
-    return NextResponse.next();
-  } catch (error) {
-    const { protocol, host, pathname } = req.nextUrl;
-    return NextResponse.redirect(
-      `${protocol}//${host}/auth/login?page=${pathname}`
-    );
+  const session = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+
+  if (!session) {
+    const requestedPage = req.nextUrl.pathname;
+    const url = req.nextUrl.clone();
+    url.pathname = `/auth/login`;
+    url.search = `page=${requestedPage}`;
+    return NextResponse.redirect(url);
   }
+
+  return NextResponse.next();
 }
 
 export const config = {
