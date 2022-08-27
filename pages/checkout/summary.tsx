@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import NextLink from "next/link";
 import {
   Box,
@@ -15,9 +15,22 @@ import { CartList } from "../../components/cart/CartList";
 import { OrderSummary } from "../../components/cart";
 import { CartContext } from "../../context";
 import { countries } from "../../utils";
+import Cookies from "js-cookie";
+import { useRouter } from "next/router";
 
 const SummaryPage = () => {
+  const router = useRouter();
   const { shippingInfo } = useContext(CartContext);
+
+  useEffect(() => {
+    if (!Cookies.get("firstName")) {
+      router.push("/checkout/address");
+    }
+  }, [router]);
+
+  if (!shippingInfo) {
+    return <></>;
+  }
 
   return (
     <ShopLayout title={"Order Summary"} description={"Your order summary"}>
@@ -51,9 +64,7 @@ const SummaryPage = () => {
               </Box>
 
               <Typography>{`${shippingInfo?.firstName} ${shippingInfo?.lastName}`}</Typography>
-              <Typography>
-                {countries.find((c) => c.code === shippingInfo?.country)?.name}
-              </Typography>
+              <Typography>{shippingInfo?.country} </Typography>
               <Typography>{shippingInfo?.address}</Typography>
               <Typography>{shippingInfo?.zip}</Typography>
               <Typography>{shippingInfo?.phone}</Typography>

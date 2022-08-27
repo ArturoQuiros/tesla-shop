@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import Cookies from "js-cookie";
 import {
@@ -43,14 +43,26 @@ const AddressPage = () => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<FormData>({
-    defaultValues: getDatafromCookies(),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      phone: "",
+      country: countries[0].code,
+      address: "",
+      zip: "",
+    },
   });
 
   const onConfirmInfo = (data: FormData) => {
     updateShipping(data);
     router.push("/checkout/summary");
   };
+
+  useEffect(() => {
+    reset(getDatafromCookies());
+  }, [reset]);
 
   return (
     <ShopLayout title={"Order Billing"} description={"Lets finish your order"}>
@@ -85,25 +97,30 @@ const AddressPage = () => {
             ></TextField>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <TextField
-                select
-                {...register("country", {
-                  required: "Country is required",
-                })}
-                defaultValue={Cookies.get("country") || countries[0].code}
-                error={!!errors.country}
-                helperText={errors.country?.message}
-                variant="filled"
-                label="Country"
-              >
-                {countries.map((country) => (
-                  <MenuItem key={country.code} value={country.code}>
-                    {country.name}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </FormControl>
+            {
+              //            <FormControl fullWidth>
+            }{" "}
+            <TextField
+              //select
+              {...register("country", {
+                required: "Country is required",
+              })}
+              //defaultValue={Cookies.get("country") || countries[0].code}
+              error={!!errors.country}
+              helperText={errors.country?.message}
+              variant="filled"
+              label="Country"
+              fullWidth
+            >
+              {countries.map((country) => (
+                <MenuItem key={country.code} value={country.code}>
+                  {country.name}
+                </MenuItem>
+              ))}
+            </TextField>
+            {
+              //            </FormControl>
+            }{" "}
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
