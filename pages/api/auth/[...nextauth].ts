@@ -1,7 +1,6 @@
 import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { ArchitectureOutlined } from "@mui/icons-material";
 import { dbUsers } from "../../../database";
 
 export default NextAuth({
@@ -39,10 +38,10 @@ export default NextAuth({
 
         switch (account.type) {
           case "credentials":
+            token.user = user;
             break;
 
           case "oauth":
-            token.user = user;
             break;
         }
       }
@@ -51,6 +50,7 @@ export default NextAuth({
     async session({ session, token, user }) {
       session.accessToken = token.accessToken;
       session.user = token.user as any;
+
       return session;
     },
   },
