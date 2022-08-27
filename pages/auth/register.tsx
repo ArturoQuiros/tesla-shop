@@ -1,5 +1,8 @@
 import { useContext, useState } from "react";
+import { GetServerSideProps } from "next";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
+import { getSession, signIn } from "next-auth/react";
 import {
   Box,
   Button,
@@ -14,7 +17,6 @@ import { ErrorOutline } from "@mui/icons-material";
 import { AuthLayout } from "../../components/layouts";
 import { validations } from "../../utils";
 import { AuthContext } from "../../context";
-import { useRouter } from "next/router";
 
 type FormData = {
   name: string;
@@ -46,7 +48,8 @@ const RegisterPage = () => {
       setTimeout(() => setShowError(false), 3000);
       return;
     }
-    router.replace(destination);
+
+    await signIn(`credentials`, { email, password });
   };
 
   return (
@@ -143,4 +146,24 @@ const RegisterPage = () => {
   );
 };
 
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  query,
+}) => {
+  const session = await getSession({ req });
+  const { page = "/" } = query;
+
+  if (session) {
+    return {
+      redirect: {
+        destination: page.toString(),
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+};
 export default RegisterPage;

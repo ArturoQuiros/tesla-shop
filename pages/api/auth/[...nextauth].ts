@@ -4,7 +4,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { dbUsers } from "../../../database";
 
 export default NextAuth({
-  // Configure one or more authentication providers
+  //*Providers
   providers: [
     CredentialsProvider({
       name: "Custom Login",
@@ -27,8 +27,20 @@ export default NextAuth({
       clientId: process.env.GITHUB_ID!,
       clientSecret: process.env.GITHUB_SECRET!,
     }),
-    // ...add more providers here
   ],
+
+  //*Custom pages
+  pages: {
+    signIn: "/auth/login",
+    newUser: "/auth/register",
+  },
+
+  //*session
+  session: {
+    maxAge: 86400 * 30,
+    strategy: "jwt",
+    updateAge: 86400,
+  },
 
   //*Callbacks
   callbacks: {
