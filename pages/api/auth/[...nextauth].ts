@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { ArchitectureOutlined } from "@mui/icons-material";
+import { dbUsers } from "../../../database";
 
 export default NextAuth({
   // Configure one or more authentication providers
@@ -9,19 +10,18 @@ export default NextAuth({
     CredentialsProvider({
       name: "Custom Login",
       credentials: {
-        username: {
+        email: {
           label: "Email",
           type: "email",
           placeholder: "youremail@example.com",
         },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
-        return {
-          name: "arturo",
-          email: "asda@asd.ca",
-          role: "admin",
-        };
+      async authorize(credentials) {
+        return await dbUsers.checkCredentials(
+          credentials!.email,
+          credentials!.password
+        );
       },
     }),
     GithubProvider({
