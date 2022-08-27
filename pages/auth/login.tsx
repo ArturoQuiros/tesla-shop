@@ -32,7 +32,6 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm<FormData>();
 
-  const { loginUser } = useContext(AuthContext);
   const [showError, setShowError] = useState(false);
   const [providers, setProviders] = useState<any>({});
   const router = useRouter();
@@ -41,7 +40,6 @@ const LoginPage = () => {
   useEffect(() => {
     getProviders().then((prov) => {
       setProviders(prov);
-      console.log(prov);
     });
   }, []);
 
