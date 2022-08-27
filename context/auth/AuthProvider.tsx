@@ -5,6 +5,7 @@ import { tesloAPI } from "../../api";
 import { IUser } from "../../interfaces";
 import { AuthContext, AuthReducer } from "./";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 
 export interface AuthState {
   isLoggedIn: boolean;
@@ -20,7 +21,15 @@ export const AuthProvider: FC<PropsWithChildren<AuthState>> = ({
   children,
 }) => {
   const [state, dispatch] = useReducer(AuthReducer, initalState);
+  const { data, status } = useSession();
   const router = useRouter();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      console.log(data);
+      ///dispatch({ type: "Auth - Login", payload: data?.user as IUser });
+    }
+  }, [status, data]);
 
   useEffect(() => {
     checkToken();
