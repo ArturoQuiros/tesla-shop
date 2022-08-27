@@ -1,8 +1,9 @@
 import { FC, PropsWithChildren, useEffect, useReducer } from "react";
-import { ICartProduct, IShippingInfo } from "../../interfaces";
+import { ICartProduct, IOrder, IShippingInfo } from "../../interfaces";
 import { CartContext, CartReducer } from "./";
 
 import Cookie from "js-cookie";
+import { tesloAPI } from "../../api";
 
 export interface CartState {
   cart: ICartProduct[];
@@ -148,6 +149,30 @@ export const CartProvider: FC<PropsWithChildren<CartState>> = ({
     dispatch({ type: "Cart - Remove Cart Product", payload: product });
   };
 
+  const createOrder = async () => {
+    if (!state.shippingInfo) {
+      throw new Error("No shipping info");
+    }
+
+    const body: IOrder = {
+      orderItems: state.cart.map((p) => ({
+        ...p,
+        size: p.size!,
+      })),
+      shippingInfo: state.shippingInfo,
+      numberOfItems: state.numberOfItems,
+      subTotal: state.subTotal,
+      taxRate: state.taxRate,
+      total: state.total,
+      isPaid: false,
+    };
+
+    try {
+      const { data } = await tesloAPI.post("/orders", body);
+      console.log(data);
+    } catch (error) {}
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -155,6 +180,7 @@ export const CartProvider: FC<PropsWithChildren<CartState>> = ({
         //props
 
         //methods
+        createOrder,
         updateShipping,
         removeCartProduct,
         updateCartQuantity,
