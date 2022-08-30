@@ -172,7 +172,15 @@ export const CartProvider: FC<PropsWithChildren<CartState>> = ({
     };
 
     try {
+      //* post the order and clean the cart
       const { data } = await tesloAPI.post("/orders", body);
+
+      dispatch({
+        type: "Cart - Set order complete",
+      });
+
+      //*clean the cookie
+      Cookie.set("cart", "[]");
 
       return {
         hasError: false,

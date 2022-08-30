@@ -17,6 +17,7 @@ type CartActionType =
   | { type: "Cart - Update Products in Cart"; payload: ICartProduct[] }
   | { type: "Cart - Change Cart Quantity"; payload: ICartProduct }
   | { type: "Cart - Remove Cart Product"; payload: ICartProduct }
+  | { type: "Cart - Set order complete" }
   | {
       type: "Cart - Update Order Summary";
       payload: {
@@ -40,6 +41,7 @@ export const CartReducer = (
       };
 
     case "Cart - update Shipping Info":
+
     case "Cart - LoadShipping from Cookies":
       return {
         ...state,
@@ -79,6 +81,16 @@ export const CartReducer = (
       return {
         ...state,
         ...action.payload,
+      };
+
+    case "Cart - Set order complete":
+      return {
+        ...state,
+        cart: [],
+        numberOfItems: 0,
+        subTotal: 0,
+        taxRate: 0,
+        total: 0,
       };
 
     default:

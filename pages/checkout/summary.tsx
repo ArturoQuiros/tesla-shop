@@ -42,6 +42,7 @@ const SummaryPage = () => {
     if (hasError) {
       setIsPosting(false);
       setErrorMessage(message);
+      return;
     }
 
     router.replace(`/orders/${message}`);
@@ -100,7 +101,7 @@ const SummaryPage = () => {
                   onClick={onCreateNewOrder}
                   color="secondary"
                   className="circular-btn"
-                  disabled={!isPosting}
+                  disabled={isPosting}
                   fullWidth
                 >
                   Confirm
