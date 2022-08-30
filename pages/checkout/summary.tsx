@@ -1,10 +1,12 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import NextLink from "next/link";
 import {
   Box,
   Button,
   Card,
   CardContent,
+  Chip,
   Divider,
   Grid,
   Link,
@@ -14,14 +16,14 @@ import { ShopLayout } from "../../components/layouts";
 import { CartList } from "../../components/cart/CartList";
 import { OrderSummary } from "../../components/cart";
 import { CartContext } from "../../context";
-import { countries } from "../../utils";
 import Cookies from "js-cookie";
-import { useRouter } from "next/router";
 
 const SummaryPage = () => {
   const router = useRouter();
   const { shippingInfo } = useContext(CartContext);
   const { createOrder } = useContext(CartContext);
+  const [isPosting, setIsPosting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     if (!Cookies.get("firstName")) {
@@ -33,8 +35,16 @@ const SummaryPage = () => {
     return <></>;
   }
 
-  const onCreateNewOrder = () => {
-    createOrder();
+  const onCreateNewOrder = async () => {
+    setIsPosting(true);
+    const { hasError, message } = await createOrder();
+
+    if (hasError) {
+      setIsPosting(false);
+      setErrorMessage(message);
+    }
+
+    router.replace(`/orders/${message}`);
   };
 
   return (
@@ -85,15 +95,22 @@ const SummaryPage = () => {
               </Box>
               <OrderSummary></OrderSummary>
 
-              <Box sx={{ mt: 3 }}>
+              <Box sx={{ mt: 3 }} display="flex" flexDirection={"column"}>
                 <Button
                   onClick={onCreateNewOrder}
                   color="secondary"
                   className="circular-btn"
+                  disabled={!isPosting}
                   fullWidth
                 >
                   Confirm
                 </Button>
+
+                <Chip
+                  color="error"
+                  label={errorMessage}
+                  sx={{ mt: 1, display: errorMessage ? "flex" : "none" }}
+                ></Chip>
               </Box>
             </CardContent>
           </Card>

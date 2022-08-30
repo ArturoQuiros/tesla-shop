@@ -4,6 +4,7 @@ import { CartContext, CartReducer } from "./";
 
 import Cookie from "js-cookie";
 import { tesloAPI } from "../../api";
+import axios from "axios";
 
 export interface CartState {
   cart: ICartProduct[];
@@ -149,7 +150,10 @@ export const CartProvider: FC<PropsWithChildren<CartState>> = ({
     dispatch({ type: "Cart - Remove Cart Product", payload: product });
   };
 
-  const createOrder = async () => {
+  const createOrder = async (): Promise<{
+    hasError: boolean;
+    message: string;
+  }> => {
     if (!state.shippingInfo) {
       throw new Error("No shipping info");
     }
@@ -169,8 +173,25 @@ export const CartProvider: FC<PropsWithChildren<CartState>> = ({
 
     try {
       const { data } = await tesloAPI.post("/orders", body);
-      console.log(data);
-    } catch (error) {}
+
+      return {
+        hasError: false,
+        message: data._id!,
+      };
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const { message } = error.response?.data as { message: string };
+        return {
+          hasError: true,
+          message,
+        };
+      }
+
+      return {
+        hasError: false,
+        message: "",
+      };
+    }
   };
 
   return (
