@@ -56,8 +56,12 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
     const backendTotal = subTotal * (taxRate + 1);
 
-    if (total !== backendTotal) {
-      throw new Error("Frontend and Backend values does not match");
+    if (Math.round(total) !== Math.round(backendTotal)) {
+      throw new Error(
+        `Frontend and Backend values does not match ${total} !== ${Math.round(
+          backendTotal
+        )}`
+      );
     }
     //*los montos SI coinciden
     const userId = session.user._id;

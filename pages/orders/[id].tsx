@@ -1,3 +1,5 @@
+import { GetServerSideProps, NextPage } from "next";
+import NextLink from "next/link";
 import {
   Box,
   Button,
@@ -9,17 +11,24 @@ import {
   Link,
   Typography,
 } from "@mui/material";
-import React from "react";
 import { ShopLayout } from "../../components/layouts";
 import { CartList } from "../../components/cart/CartList";
 import { OrderSummary } from "../../components/cart";
-import NextLink from "next/link";
 import {
   CreditCardOffOutlined,
   CreditScoreOutlined,
 } from "@mui/icons-material";
+import { getSession } from "next-auth/react";
+import { dbOrders } from "../../database";
+import { IOrder } from "../../interfaces";
 
-const OrderPage = () => {
+interface Props {
+  order: IOrder;
+}
+
+const OrderPage: NextPage<Props> = ({ order }) => {
+  console.log({ order });
+
   return (
     <ShopLayout title={"Order #XXX"} description={"Your order summary"}>
       <Typography variant="h1" component={"h1"}>
@@ -99,6 +108,45 @@ const OrderPage = () => {
       </Grid>
     </ShopLayout>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  query,
+}) => {
+  const { id = "" } = query; // your fetch function here
+  const session: any = await getSession({ req });
+
+  if (!session) {
+    redirect: {
+      destination: `/auth/login?page=/orders/${id}`;
+      permanent: false;
+    }
+  }
+
+  const order = await dbOrders.getOrderByID(id.toString());
+
+  if (!order) {
+    return {
+      redirect: {
+        destination: `/orders/history`,
+        permanent: false,
+      },
+    };
+  }
+
+  if (order.user !== session?.user._id) {
+    return {
+      redirect: {
+        destination: `/orders/history`,
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { order },
+  };
 };
 
 export default OrderPage;
