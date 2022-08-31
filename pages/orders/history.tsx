@@ -14,9 +14,10 @@ import { dbOrders } from "../../database";
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 100 },
   { field: "fullname", headerName: "Full Name", width: 200 },
+  { field: "orderId", headerName: "Order ID", width: 250 },
   {
     field: "paid",
-    headerName: "Status",
+    headerName: "Payment",
     width: 200,
     renderCell: (params: GridValueGetterParams) => {
       return params.row.paid ? (
@@ -43,7 +44,7 @@ const columns: GridColDef[] = [
     sortable: false,
     renderCell: (params: GridValueGetterParams) => {
       return (
-        <NextLink href={`/orders/${params.row.id}`} passHref>
+        <NextLink href={`/orders/${params.row.orderId}`} passHref>
           <Link underline="always">Go to order</Link>
         </NextLink>
       );
@@ -51,25 +52,19 @@ const columns: GridColDef[] = [
   },
 ];
 
-const row = [
-  { id: 1, paid: true, fullname: "Arturo Quiros" },
-  { id: 2, paid: true, fullname: "Arturo Quiros" },
-  { id: 3, paid: true, fullname: "Arturo Quiros" },
-  { id: 4, paid: true, fullname: "Arturo Quiros" },
-  { id: 5, paid: false, fullname: "Arturo Quiros" },
-  { id: 6, paid: false, fullname: "Arturo Quiros" },
-  { id: 7, paid: false, fullname: "Arturo Quiros" },
-  { id: 8, paid: false, fullname: "Arturo Quiros" },
-];
-
 interface Props {
-  //orders: IOrder[];
-  //id: number;
-  orders: any;
+  orders: IOrder[];
 }
 
 const HistoryPage: NextPage<Props> = ({ orders }) => {
-  console.log({ orders });
+  const row = orders.map((order, index) => {
+    return {
+      id: index,
+      paid: order.isPaid,
+      fullname: `${order.shippingInfo.firstName}  ${order.shippingInfo.lastName}`,
+      orderId: order._id,
+    };
+  });
 
   return (
     <ShopLayout title={"Order History"} description={"Orders History"}>
