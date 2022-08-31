@@ -2,6 +2,7 @@ import { GetServerSideProps, NextPage } from "next";
 import { getSession } from "next-auth/react";
 import {
   Box,
+  Button,
   Card,
   CardContent,
   Chip,
@@ -86,29 +87,30 @@ const OrderPage: NextPage<Props> = ({ order }) => {
               <OrderSummary order={order} />
               <Divider sx={{ my: 1 }}> </Divider>
 
-              <Box display={"flex"} justifyContent="space-between">
-                <Typography variant="h2">
-                  <strong>Payment Status</strong>
-                </Typography>
-
-                {!order.isPaid ? (
-                  <Chip
-                    sx={{ my: 2 }}
-                    label="Not Paid"
-                    variant="outlined"
-                    color="error"
-                    icon={<CreditCardOffOutlined />}
-                  />
+              <Grid item xs={12}>
+                {order.isPaid ? (
+                  <Button
+                    disabled
+                    type="submit"
+                    color="secondary"
+                    className="circular-btn"
+                    size="large"
+                    fullWidth
+                  >
+                    Paid
+                  </Button>
                 ) : (
-                  <Chip
-                    sx={{ my: 2 }}
-                    label="Paid "
-                    variant="outlined"
-                    color="success"
-                    icon={<CreditScoreOutlined />}
-                  />
+                  <Button
+                    type="submit"
+                    color="secondary"
+                    className="circular-btn"
+                    size="large"
+                    fullWidth
+                  >
+                    Pay
+                  </Button>
                 )}
-              </Box>
+              </Grid>
             </CardContent>
           </Card>
         </Grid>

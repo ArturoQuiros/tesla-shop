@@ -18,7 +18,7 @@ interface Props {
   products?: IOrderItem[];
 }
 
-export const CartList: FC<Props> = ({ isEditable = false, products = [] }) => {
+export const CartList: FC<Props> = ({ isEditable = false, products }) => {
   const { cart, updateCartQuantity, removeCartProduct } =
     useContext(CartContext);
 
