@@ -1,14 +1,12 @@
 import { GetServerSideProps, NextPage } from "next";
-import NextLink from "next/link";
+import { getSession } from "next-auth/react";
 import {
   Box,
-  Button,
   Card,
   CardContent,
   Chip,
   Divider,
   Grid,
-  Link,
   Typography,
 } from "@mui/material";
 import { ShopLayout } from "../../components/layouts";
@@ -18,7 +16,6 @@ import {
   CreditCardOffOutlined,
   CreditScoreOutlined,
 } from "@mui/icons-material";
-import { getSession } from "next-auth/react";
 import { dbOrders } from "../../database";
 import { IOrder } from "../../interfaces";
 
