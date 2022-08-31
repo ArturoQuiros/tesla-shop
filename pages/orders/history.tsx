@@ -9,6 +9,7 @@ import {
 } from "@mui/icons-material";
 import { IOrder } from "../../interfaces";
 import { getSession } from "next-auth/react";
+import { dbOrders } from "../../database";
 
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 100 },
@@ -64,11 +65,11 @@ const row = [
 interface Props {
   //orders: IOrder[];
   //id: number;
-  session: any;
+  orders: any;
 }
 
-const HistoryPage: NextPage<Props> = ({ session }) => {
-  console.log({ session });
+const HistoryPage: NextPage<Props> = ({ orders }) => {
+  console.log({ orders });
 
   return (
     <ShopLayout title={"Order History"} description={"Orders History"}>
@@ -106,9 +107,11 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     };
   }
 
+  const orders = await dbOrders.getOrderByUserID(session.user._id);
+
   return {
     props: {
-      session,
+      orders,
     },
   };
 };
