@@ -30,29 +30,35 @@ const OrderPage: NextPage<Props> = ({ order }) => {
   console.log({ order });
 
   return (
-    <ShopLayout title={"Order #XXX"} description={"Your order summary"}>
+    <ShopLayout
+      title={`Order #${order._id}`}
+      description={"Your order summary"}
+    >
       <Typography variant="h1" component={"h1"}>
-        Order #XXX
+        Order #{order._id}
       </Typography>
 
-      <Chip
-        sx={{ my: 2 }}
-        label="Not Paid"
-        variant="outlined"
-        color="error"
-        icon={<CreditCardOffOutlined />}
-      />
+      {order.isPaid ? (
+        <Chip
+          sx={{ my: 2 }}
+          label="Not Paid"
+          variant="outlined"
+          color="error"
+          icon={<CreditCardOffOutlined />}
+        />
+      ) : (
+        <Chip
+          sx={{ my: 2 }}
+          label="Paid "
+          variant="outlined"
+          color="success"
+          icon={<CreditScoreOutlined />}
+        />
+      )}
 
-      <Chip
-        sx={{ my: 2 }}
-        label="Paid "
-        variant="outlined"
-        color="success"
-        icon={<CreditScoreOutlined />}
-      />
       <Grid container sx={{ marginLeft: 2, marginTop: 2 }}>
         <Grid item xs={12} sm={7}>
-          <CartList></CartList>
+          <CartList products={order.orderItems}></CartList>
         </Grid>
 
         <Grid item xs={12} sm={5}>
@@ -70,26 +76,21 @@ const OrderPage: NextPage<Props> = ({ order }) => {
                 <Typography variant="subtitle1">
                   <strong>Shipping Info</strong>
                 </Typography>
-                <NextLink href={"/checkout/address"} passHref>
-                  <Link underline="always">Edit</Link>
-                </NextLink>
               </Box>
 
-              <Typography>Arturo Quirós</Typography>
-              <Typography>Costa Rica</Typography>
-              <Typography>Barrio San Roque, en la casa</Typography>
-              <Typography>joseq2408@gmail.com</Typography>
-              <Typography>+506 86683305</Typography>
+              <Typography>{`${order.shippingInfo.firstName} ${order.shippingInfo.lastName}`}</Typography>
+              <Typography>{order.shippingInfo.country}</Typography>
+              <Typography>{order.shippingInfo.address}</Typography>
+              <Typography>{order.shippingInfo.phone}</Typography>
+              <Typography>{order.shippingInfo.zip}</Typography>
 
               <Divider sx={{ my: 1 }}> </Divider>
               <Box display={"flex"} justifyContent="space-between">
                 <Typography variant="h2">
                   <strong>Order Details</strong>
                 </Typography>
-                <NextLink href={"/cart"} passHref>
-                  <Link underline="always">Edit</Link>
-                </NextLink>
               </Box>
+
               <OrderSummary></OrderSummary>
 
               <Box sx={{ mt: 3 }}>
