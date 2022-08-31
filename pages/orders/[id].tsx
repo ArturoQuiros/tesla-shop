@@ -27,18 +27,13 @@ interface Props {
 }
 
 const OrderPage: NextPage<Props> = ({ order }) => {
-  console.log({ order });
-
   return (
-    <ShopLayout
-      title={`Order #${order._id}`}
-      description={"Your order summary"}
-    >
+    <ShopLayout title={`Order Summary`} description={"Your order summary"}>
       <Typography variant="h1" component={"h1"}>
         Order #{order._id}
       </Typography>
 
-      {order.isPaid ? (
+      {!order.isPaid ? (
         <Chip
           sx={{ my: 2 }}
           label="Not Paid"
@@ -91,17 +86,31 @@ const OrderPage: NextPage<Props> = ({ order }) => {
                 </Typography>
               </Box>
 
-              <OrderSummary></OrderSummary>
+              <OrderSummary order={order} />
+              <Divider sx={{ my: 1 }}> </Divider>
 
-              <Box sx={{ mt: 3 }}>
-                <h1>Pay</h1>
-                <Chip
-                  sx={{ my: 2 }}
-                  label="Paid "
-                  variant="outlined"
-                  color="success"
-                  icon={<CreditScoreOutlined />}
-                />
+              <Box display={"flex"} justifyContent="space-between">
+                <Typography variant="h2">
+                  <strong>Payment Status</strong>
+                </Typography>
+
+                {!order.isPaid ? (
+                  <Chip
+                    sx={{ my: 2 }}
+                    label="Not Paid"
+                    variant="outlined"
+                    color="error"
+                    icon={<CreditCardOffOutlined />}
+                  />
+                ) : (
+                  <Chip
+                    sx={{ my: 2 }}
+                    label="Paid "
+                    variant="outlined"
+                    color="success"
+                    icon={<CreditScoreOutlined />}
+                  />
+                )}
               </Box>
             </CardContent>
           </Card>

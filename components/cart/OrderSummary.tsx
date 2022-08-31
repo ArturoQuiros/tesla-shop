@@ -1,11 +1,23 @@
 import { Divider, Grid, Typography } from "@mui/material";
-import { useContext } from "react";
+import { FC, useContext } from "react";
 import { CartContext } from "../../context";
+import { IOrder } from "../../interfaces";
 import { currency } from "../../utils";
 
-export const OrderSummary = () => {
-  const { numberOfItems, subTotal, taxRate, total } = useContext(CartContext);
+interface Props {
+  order?: IOrder;
+}
+
+export const OrderSummary: FC<Props> = ({ order }) => {
+  let { numberOfItems, subTotal, taxRate, total } = useContext(CartContext);
   const taxPorcentage = Number(process.env.NEXT_PUBLIC_TAX_RATE) * 100;
+
+  if (order) {
+    (numberOfItems = order.numberOfItems),
+      (subTotal = order.subTotal),
+      (taxRate = order.taxRate),
+      (total = order.total);
+  }
 
   return (
     <Grid container>
