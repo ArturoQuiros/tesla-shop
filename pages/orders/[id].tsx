@@ -107,7 +107,7 @@ const OrderPage: NextPage<Props> = ({ order }) => {
                         purchase_units: [
                           {
                             amount: {
-                              value: "999999",
+                              value: order.total.toString(),
                             },
                           },
                         ],
