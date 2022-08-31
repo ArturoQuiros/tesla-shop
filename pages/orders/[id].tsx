@@ -19,6 +19,7 @@ import {
 } from "@mui/icons-material";
 import { dbOrders } from "../../database";
 import { IOrder } from "../../interfaces";
+import { PayPalButtons } from "@paypal/react-paypal-js";
 
 interface Props {
   order: IOrder;
@@ -100,15 +101,25 @@ const OrderPage: NextPage<Props> = ({ order }) => {
                     Paid
                   </Button>
                 ) : (
-                  <Button
-                    type="submit"
-                    color="secondary"
-                    className="circular-btn"
-                    size="large"
-                    fullWidth
-                  >
-                    Pay
-                  </Button>
+                  <PayPalButtons
+                    createOrder={(data, actions) => {
+                      return actions.order.create({
+                        purchase_units: [
+                          {
+                            amount: {
+                              value: "999999",
+                            },
+                          },
+                        ],
+                      });
+                    }}
+                    onApprove={(data, actions) => {
+                      return actions.order!.capture().then((details) => {
+                        const name = details.payer.name!.given_name;
+                        alert(`Transaction completed by ${name}`);
+                      });
+                    }}
+                  />
                 )}
               </Grid>
             </CardContent>
