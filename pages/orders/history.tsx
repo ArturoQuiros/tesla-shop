@@ -1,3 +1,4 @@
+import { GetServerSideProps, NextPage } from "next";
 import NextLink from "next/link";
 import { Chip, Grid, Link, Typography } from "@mui/material";
 import { ShopLayout } from "../../components/layouts/ShopLayout";
@@ -6,6 +7,8 @@ import {
   CreditCardOffOutlined,
   CreditScoreOutlined,
 } from "@mui/icons-material";
+import { IOrder } from "../../interfaces";
+import { getSession } from "next-auth/react";
 
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 100 },
@@ -58,7 +61,15 @@ const row = [
   { id: 8, paid: false, fullname: "Arturo Quiros" },
 ];
 
-const HistoryPage = () => {
+interface Props {
+  //orders: IOrder[];
+  //id: number;
+  session: any;
+}
+
+const HistoryPage: NextPage<Props> = ({ session }) => {
+  console.log({ session });
+
   return (
     <ShopLayout title={"Order History"} description={"Orders History"}>
       <Typography variant="h1" component="h1">
@@ -83,4 +94,22 @@ const HistoryPage = () => {
   );
 };
 
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const session: any = await getSession({ req });
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: `/auth/orders?page=/orders/history`,
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      session,
+    },
+  };
+};
 export default HistoryPage;
