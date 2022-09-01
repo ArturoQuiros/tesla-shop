@@ -69,7 +69,7 @@ const OrderPage: NextPage<Props> = ({ order }) => {
           label="Not Paid"
           variant="outlined"
           color="error"
-          icon={<CreditCardOffOutlined />}
+          icon={<CreditCardOffOutlined sx={{ ml: 2 }} />}
         />
       ) : (
         <Chip
