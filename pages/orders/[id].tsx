@@ -20,12 +20,43 @@ import {
 import { dbOrders } from "../../database";
 import { IOrder } from "../../interfaces";
 import { PayPalButtons } from "@paypal/react-paypal-js";
+import { tesloAPI } from "../../api";
+import { useRouter } from "next/router";
 
 interface Props {
   order: IOrder;
 }
 
+export type OrderResponseBody = {
+  id: string;
+  status:
+    | "COMPLETED"
+    | "SAVED"
+    | "APPROVED"
+    | "VOIDED"
+    | "PAYER_ACTION_REQUIRED";
+};
+
 const OrderPage: NextPage<Props> = ({ order }) => {
+  const router = useRouter();
+
+  const onOrderPaid = async (details: OrderResponseBody) => {
+    if (details.status !== "COMPLETED") {
+      return alert("No PayPal pay");
+    }
+
+    try {
+      const { data } = await tesloAPI.post(`orders/pay`, {
+        transactionId: details.id,
+        orderId: order._id,
+      });
+
+      router.reload();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <ShopLayout title={`Order Summary`} description={"Your order summary"}>
       <Typography variant="h1" component={"h1"}>
@@ -115,8 +146,7 @@ const OrderPage: NextPage<Props> = ({ order }) => {
                     }}
                     onApprove={(data, actions) => {
                       return actions.order!.capture().then((details) => {
-                        const name = details.payer.name!.given_name;
-                        alert(`Transaction completed by ${name}`);
+                        onOrderPaid(details);
                       });
                     }}
                   />
