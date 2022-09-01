@@ -1,11 +1,14 @@
+import { useState } from "react";
 import { GetServerSideProps, NextPage } from "next";
 import { getSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import {
   Box,
   Button,
   Card,
   CardContent,
   Chip,
+  CircularProgress,
   Divider,
   Grid,
   Typography,
@@ -21,7 +24,6 @@ import { dbOrders } from "../../database";
 import { IOrder } from "../../interfaces";
 import { PayPalButtons } from "@paypal/react-paypal-js";
 import { tesloAPI } from "../../api";
-import { useRouter } from "next/router";
 
 interface Props {
   order: IOrder;
@@ -39,11 +41,13 @@ export type OrderResponseBody = {
 
 const OrderPage: NextPage<Props> = ({ order }) => {
   const router = useRouter();
+  const [isPaying, setIsPaying] = useState(false);
 
   const onOrderPaid = async (details: OrderResponseBody) => {
     if (details.status !== "COMPLETED") {
       return alert("No PayPal pay");
     }
+    setIsPaying(true);
 
     try {
       const { data } = await tesloAPI.post(`orders/pay`, {
@@ -53,6 +57,7 @@ const OrderPage: NextPage<Props> = ({ order }) => {
 
       router.reload();
     } catch (error) {
+      setIsPaying(false);
       console.log(error);
     }
   };
@@ -120,37 +125,54 @@ const OrderPage: NextPage<Props> = ({ order }) => {
               <Divider sx={{ my: 1 }}> </Divider>
 
               <Grid item xs={12}>
-                {order.isPaid ? (
-                  <Button
-                    disabled
-                    type="submit"
-                    color="secondary"
-                    className="circular-btn"
-                    size="large"
-                    fullWidth
-                  >
-                    Paid
-                  </Button>
-                ) : (
-                  <PayPalButtons
-                    createOrder={(data, actions) => {
-                      return actions.order.create({
-                        purchase_units: [
-                          {
-                            amount: {
-                              value: order.total.toString(),
+                <Box
+                  sx={{ mt: 2 }}
+                  display={isPaying ? "flex" : "none"}
+                  justifyContent={"center"}
+                  className="fadeIn"
+                >
+                  <CircularProgress></CircularProgress>
+                </Box>
+
+                <Box
+                  sx={{
+                    display: isPaying ? "none" : "flex",
+                    flex: 1,
+                  }}
+                  flexDirection="column"
+                >
+                  {order.isPaid ? (
+                    <Button
+                      disabled
+                      type="submit"
+                      color="secondary"
+                      className="circular-btn"
+                      size="large"
+                      fullWidth
+                    >
+                      Paid
+                    </Button>
+                  ) : (
+                    <PayPalButtons
+                      createOrder={(data, actions) => {
+                        return actions.order.create({
+                          purchase_units: [
+                            {
+                              amount: {
+                                value: order.total.toString(),
+                              },
                             },
-                          },
-                        ],
-                      });
-                    }}
-                    onApprove={(data, actions) => {
-                      return actions.order!.capture().then((details) => {
-                        onOrderPaid(details);
-                      });
-                    }}
-                  />
-                )}
+                          ],
+                        });
+                      }}
+                      onApprove={(data, actions) => {
+                        return actions.order!.capture().then((details) => {
+                          onOrderPaid(details);
+                        });
+                      }}
+                    />
+                  )}
+                </Box>
               </Grid>
             </CardContent>
           </Card>
