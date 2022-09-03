@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import useSWR from "swr";
 import {
   AccessTimeOutlined,
   AttachMoneyOutlined,
@@ -8,21 +10,41 @@ import {
   GroupOutlined,
   ProductionQuantityLimitsOutlined,
 } from "@mui/icons-material";
-import { Card, CardContent, Grid, Typography } from "@mui/material";
-import React from "react";
+import { Grid, Typography } from "@mui/material";
 import { SummaryTile } from "../../components/admin";
 import { AdminLayout } from "../../components/layouts";
+import { IDashboardResponse } from "../../interfaces";
 
 const DashboardPage = () => {
+  const { data, error } = useSWR<IDashboardResponse>("/api/admin/dashboard", {
+    refreshInterval: 30 * 1000,
+  });
+
+  const [refreshInterval, setRefreshInterval] = useState(30);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRefreshInterval((refreshInterval) =>
+        refreshInterval > 0 ? refreshInterval - 1 : 30
+      );
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  if (!error && !data) {
+    return <></>;
+  }
+
+  if (error) {
+    console.log(error);
+    return <Typography>An unexpected error has ocurred</Typography>;
+  }
+
   return (
-    <AdminLayout
-      title={"Dashboard"}
-      subTitle={"Stats"}
-      icon={<DashboardOutlined />}
-    >
+    <AdminLayout title={"Dashboard"} subTitle={""} icon={<DashboardOutlined />}>
       <Grid container spacing={2}>
         <SummaryTile
-          title={"99"}
+          title={`${data?.numberOfOrders}`}
           subTitle={"Total Orders"}
           icon={
             <CreditCardOutlined
@@ -33,7 +55,7 @@ const DashboardPage = () => {
         />
 
         <SummaryTile
-          title={"99"}
+          title={`${data?.paidOrders}`}
           subTitle={"Paid Orders"}
           icon={
             <AttachMoneyOutlined
@@ -44,7 +66,7 @@ const DashboardPage = () => {
         />
 
         <SummaryTile
-          title={"99"}
+          title={`${data?.notPaidOrders}`}
           subTitle={"Pending Orders"}
           icon={
             <CreditCardOffOutlined
@@ -55,15 +77,15 @@ const DashboardPage = () => {
         />
 
         <SummaryTile
-          title={"99"}
-          subTitle={"Users"}
+          title={`${data?.numberOfClients}`}
+          subTitle={"Clients"}
           icon={
             <GroupOutlined color="error" sx={{ fontSize: 40 }}></GroupOutlined>
           }
         />
 
         <SummaryTile
-          title={"99"}
+          title={`${data?.noStockProducts}`}
           subTitle={"Out of Stock"}
           icon={
             <CancelPresentationOutlined
@@ -74,7 +96,7 @@ const DashboardPage = () => {
         />
 
         <SummaryTile
-          title={"99"}
+          title={`${data?.lowStockProducts}`}
           subTitle={"Out of Stock"}
           icon={
             <ProductionQuantityLimitsOutlined
@@ -85,7 +107,7 @@ const DashboardPage = () => {
         />
 
         <SummaryTile
-          title={"99"}
+          title={refreshInterval}
           subTitle={"Reaload in"}
           icon={
             <AccessTimeOutlined
