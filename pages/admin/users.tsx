@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
-import useSWR from "swr";
 import { PeopleOutline } from "@mui/icons-material";
-import { AdminLayout } from "../../components/layouts/AdminLayout";
+import useSWR from "swr";
+
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
-import { Grid, MenuItem, Select } from "@mui/material";
+import { Grid, Select, MenuItem } from "@mui/material";
+
+import { AdminLayout } from "../../components/layouts";
 import { IUser } from "../../interfaces";
 import { tesloAPI } from "../../api";
 
@@ -17,15 +19,10 @@ const UsersPage = () => {
     }
   }, [data]);
 
-  if (!data && !error) {
-    return <></>;
-  }
+  if (!data && !error) return <></>;
 
-  const onRoleChange = async (userId: string, newRole: string) => {
-    const prevUsers = users.map((user) => ({
-      ...user,
-    }));
-
+  const onRoleUpdated = async (userId: string, newRole: string) => {
+    const previosUsers = users.map((user) => ({ ...user }));
     const updatedUsers = users.map((user) => ({
       ...user,
       role: userId === user._id ? newRole : user.role,
@@ -34,31 +31,32 @@ const UsersPage = () => {
     setUsers(updatedUsers);
 
     try {
-      await tesloAPI.put(`/admin/users`, { userId, role: newRole });
+      await tesloAPI.put("/admin/users", { userId, role: newRole });
     } catch (error) {
-      setUsers(prevUsers);
-      alert(error);
+      setUsers(previosUsers);
+      console.log(error);
+      alert("No se pudo actualizar el role del usuario");
     }
   };
 
   const columns: GridColDef[] = [
     { field: "email", headerName: "Email", width: 250 },
-    { field: "name", headerName: "Name", width: 250 },
+    { field: "name", headerName: "Full Name", width: 300 },
     {
       field: "role",
       headerName: "Role",
-      width: 250,
+      width: 300,
       renderCell: ({ row }: GridValueGetterParams) => {
         return (
           <Select
             value={row.role}
-            label="Role"
+            label="Rol"
+            onChange={({ target }) => onRoleUpdated(row.id, target.value)}
             sx={{ width: "300px" }}
-            onChange={({ target }) => onRoleChange(row.id, target.value)}
           >
             <MenuItem value="admin"> Admin </MenuItem>
             <MenuItem value="client"> Client </MenuItem>
-            <MenuItem value="super-user"> Root </MenuItem>
+            <MenuItem value="super-user"> Super User </MenuItem>
             <MenuItem value="SEO"> SEO </MenuItem>
           </Select>
         );
@@ -75,22 +73,18 @@ const UsersPage = () => {
 
   return (
     <AdminLayout
-      title={"Users"}
-      subTitle={""}
-      icon={<PeopleOutline></PeopleOutline>}
+      title={"Usuarios"}
+      subTitle={"Mantenimiento de usuarios"}
+      icon={<PeopleOutline />}
     >
-      <Grid container>
-        <Grid
-          item
-          xs={12}
-          sx={{ mt: 2, height: "calc(100vh - 200px)", width: "100px" }}
-        >
+      <Grid container className="fadeIn">
+        <Grid item xs={12} sx={{ height: 650, width: "100%" }}>
           <DataGrid
             rows={rows}
             columns={columns}
             pageSize={10}
             rowsPerPageOptions={[10]}
-          ></DataGrid>
+          />
         </Grid>
       </Grid>
     </AdminLayout>

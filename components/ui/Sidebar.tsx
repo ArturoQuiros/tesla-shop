@@ -171,7 +171,7 @@ export const Sidebar = () => {
                 <ListItemText primary={"Orders"} />
               </ListItem>
 
-              <ListItem button onClick={() => navigateTo(`/admin/users/users`)}>
+              <ListItem button onClick={() => navigateTo(`/admin/users`)}>
                 <ListItemIcon>
                   <AdminPanelSettings />
                 </ListItemIcon>
