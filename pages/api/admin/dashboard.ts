@@ -33,24 +33,33 @@ export default function handler(
 }
 
 const getStats = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  //*number of items
   await db.connect();
-  const numberOfOrders = await Order.count();
-  const paidOrders = await Order.count({ isPaid: true });
-  const notPaidOrders = numberOfOrders - paidOrders;
-  const numberOfClients = await User.count({ role: "client" });
-  const numberOfProducts = await Product.count();
-  const noStockProducts = await Product.count({ inStock: 0 });
-  const lowStockProducts = await Product.count({ inStock: 10 });
+
+  const [
+    numberOfOrders,
+    paidOrders,
+    numberOfClients, //only clients
+    numberOfProducts,
+    noStockProducts,
+    lowStockProducts,
+  ] = await Promise.all([
+    Order.count(),
+    Order.count({ isPaid: true }),
+    User.count({ role: "client" }),
+    Product.count(),
+    Product.count({ inStock: 0 }),
+    Product.count({ inStock: { $lte: 10 } }),
+  ]);
+
   await db.disconnect();
 
   return res.status(200).json({
     numberOfOrders,
     paidOrders,
-    notPaidOrders,
+    notPaidOrders: numberOfOrders - paidOrders,
     numberOfClients, //only clients
     numberOfProducts,
     noStockProducts,
-    lowStockProducts: 0,
+    lowStockProducts,
   });
 };
