@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import useSWR from "swr";
 import { PeopleOutline } from "@mui/icons-material";
 import { AdminLayout } from "../../components/layouts/AdminLayout";
@@ -7,10 +8,35 @@ import { IUser } from "../../interfaces";
 import { tesloAPI } from "../../api";
 
 const UsersPage = () => {
+  const { data, error } = useSWR<IUser[]>("/api/admin/users");
+  const [users, setUsers] = useState<IUser[]>([]);
+
+  useEffect(() => {
+    if (data) {
+      setUsers(data);
+    }
+  }, [data]);
+
+  if (!data && !error) {
+    return <></>;
+  }
+
   const onRoleChange = async (userId: string, newRole: string) => {
+    const prevUsers = users.map((user) => ({
+      ...user,
+    }));
+
+    const updatedUsers = users.map((user) => ({
+      ...user,
+      role: userId === user._id ? newRole : user.role,
+    }));
+
+    setUsers(updatedUsers);
+
     try {
       await tesloAPI.put(`/admin/users`, { userId, role: newRole });
     } catch (error) {
+      setUsers(prevUsers);
       alert(error);
     }
   };
@@ -40,12 +66,7 @@ const UsersPage = () => {
     },
   ];
 
-  const { data, error } = useSWR<IUser[]>("/api/admin/users");
-  if (!data && !error) {
-    return <></>;
-  }
-
-  const rows = data!.map((user) => ({
+  const rows = users.map((user) => ({
     id: user._id,
     email: user.email,
     name: user.name,
