@@ -4,8 +4,17 @@ import { AdminLayout } from "../../components/layouts/AdminLayout";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import { Grid, MenuItem, Select } from "@mui/material";
 import { IUser } from "../../interfaces";
+import { tesloAPI } from "../../api";
 
 const UsersPage = () => {
+  const onRoleChange = async (userId: string, newRole: string) => {
+    try {
+      await tesloAPI.put(`/admin/users`, { userId, role: newRole });
+    } catch (error) {
+      alert(error);
+    }
+  };
+
   const columns: GridColDef[] = [
     { field: "email", headerName: "Email", width: 250 },
     { field: "name", headerName: "Name", width: 250 },
@@ -15,11 +24,16 @@ const UsersPage = () => {
       width: 250,
       renderCell: ({ row }: GridValueGetterParams) => {
         return (
-          <Select value={row.role} label="Role" sx={{ width: "300px" }}>
+          <Select
+            value={row.role}
+            label="Role"
+            sx={{ width: "300px" }}
+            onChange={({ target }) => onRoleChange(row.id, target.value)}
+          >
             <MenuItem value="admin"> Admin </MenuItem>
-            <MenuItem value="admin"> Admin </MenuItem>
-            <MenuItem value="admin"> Admin </MenuItem>
-            <MenuItem value="admin"> Admin </MenuItem>
+            <MenuItem value="client"> Client </MenuItem>
+            <MenuItem value="super-user"> Root </MenuItem>
+            <MenuItem value="SEO"> SEO </MenuItem>
           </Select>
         );
       },
