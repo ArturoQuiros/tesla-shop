@@ -6,7 +6,7 @@ import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import { Grid, Select, MenuItem } from "@mui/material";
 
 import { AdminLayout } from "../../components/layouts";
-import { IUser } from "../../interfaces";
+import { IRoles, IUser } from "../../interfaces";
 import { tesloAPI } from "../../api";
 
 const UsersPage = () => {
@@ -25,7 +25,7 @@ const UsersPage = () => {
     const previosUsers = users.map((user) => ({ ...user }));
     const updatedUsers = users.map((user) => ({
       ...user,
-      role: userId === user._id ? newRole : user.role,
+      role: userId === user._id ? (newRole as IRoles) : (user.role as IRoles),
     }));
 
     setUsers(updatedUsers);
