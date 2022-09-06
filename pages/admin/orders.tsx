@@ -7,30 +7,30 @@ import { AdminLayout } from "../../components/layouts";
 import { IOrder, IUser } from "../../interfaces";
 
 const columns: GridColDef[] = [
-  { field: "id", headerName: "Orden ID", width: 250 },
-  { field: "email", headerName: "Correo", width: 250 },
-  { field: "name", headerName: "Nombre Completo", width: 300 },
-  { field: "total", headerName: "Monto total", width: 300 },
+  { field: "id", headerName: "ID", width: 250 },
+  { field: "email", headerName: "Email", width: 250 },
+  { field: "name", headerName: "Full Name", width: 300 },
+  { field: "total", headerName: "Total", width: 100 },
   {
     field: "isPaid",
-    headerName: "Pagada",
+    headerName: "Paid",
     renderCell: ({ row }: GridValueGetterParams) => {
       return row.isPaid ? (
-        <Chip variant="outlined" label="Pagada" color="success" />
+        <Chip variant="outlined" label="Paid" color="success" />
       ) : (
-        <Chip variant="outlined" label="Pendiente" color="error" />
+        <Chip variant="outlined" label="Pending" color="error" />
       );
     },
   },
   {
     field: "noProducts",
-    headerName: "No.Productos",
+    headerName: "Quantity",
     align: "center",
     width: 150,
   },
   {
     field: "check",
-    headerName: "Ver orden",
+    headerName: "Order",
     renderCell: ({ row }: GridValueGetterParams) => {
       return (
         <a href={`/admin/orders/${row.id}`} target="_blank" rel="noreferrer">
@@ -39,14 +39,14 @@ const columns: GridColDef[] = [
       );
     },
   },
-  { field: "createdAt", headerName: "Creada en", width: 300 },
+  { field: "createdAt", headerName: "Created at", width: 300 },
 ];
 
 const OrdersPage = () => {
-  const { data, error } = useSWR<IOrder[]>("/api/admin/orders");
+  const { data, error } = useSWR("/api/admin/orders");
   if (!data && !error) return <></>;
 
-  const rows = data!.map((order) => ({
+  const rows = data!.orders.map((order: IOrder) => ({
     id: order._id,
     email: (order.user as IUser).email,
     name: (order.user as IUser).name,
