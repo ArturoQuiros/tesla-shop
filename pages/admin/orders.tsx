@@ -58,8 +58,8 @@ const OrdersPage = () => {
 
   return (
     <AdminLayout
-      title={"Ordenes"}
-      subTitle={"Mantenimiento de ordenes"}
+      title={"Orders"}
+      subTitle={""}
       icon={<ConfirmationNumberOutlined />}
     >
       <Grid container className="fadeIn">
