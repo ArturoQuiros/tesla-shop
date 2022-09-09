@@ -1,10 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "../../../database";
+import { IProduct } from "../../../interfaces";
 import { Product } from "../../../models";
 
-type Data = {
-  message: string;
-};
+type Data =
+  | {
+      message: string;
+    }
+  | IProduct[];
 
 export default function handler(
   req: NextApiRequest,
@@ -31,5 +34,5 @@ const getProducts = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   //Todo: actualizar imagenes
   await db.disconnect();
 
-  res.status(200).json(products);
+  return res.status(200).json(products);
 };
