@@ -1,11 +1,35 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { db } from "../../../database";
+import { Product } from "../../../models";
 
 type Data = {
-  name: string;
+  message: string;
 };
 
-export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
-  res.status(200).json({ name: "Example" });
+export default function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<Data>
+) {
+  switch (req.method) {
+    case "GET":
+      return getProducts(req, res);
+    case "PUT":
+      break;
+    case "POST":
+      break;
+
+    default:
+      return res.status(400).json({ message: "Bad Request" });
+  }
 }
 
-//!12xxx
+const getProducts = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  await db.connect();
+
+  const products = await Product.find().sort({ title: "asc" }).lean();
+
+  //Todo: actualizar imagenes
+  await db.disconnect();
+
+  res.status(200).json(products);
+};
